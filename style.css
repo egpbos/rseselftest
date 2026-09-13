@@ -13,7 +13,7 @@
 
 * { box-sizing: border-box; }
 
-html, body { height: 100%; }
+html { min-height: 100%; }
 
 body {
   margin: 0;
@@ -21,10 +21,13 @@ body {
   color: var(--ink);
   background: radial-gradient(1200px 600px at 50% -10%, var(--bg-1), transparent 60%),
               linear-gradient(180deg, var(--bg-2), #eef1f7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh;   /* fallback */
+  min-height: 100dvh;  /* dynamic viewport height: follows the mobile address bar */
+  display: grid;
+  place-items: center;
   padding: 24px;
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
   -webkit-font-smoothing: antialiased;
 }
 
