@@ -25,10 +25,10 @@ const QUESTIONS = [
 ];
 
 const TIERS = [
-  { label: "RSE", article: "an" },
-  { label: "Senior RSE", article: "a" },
-  { label: "Ultra-Elite RSE", article: "an" },
-  { label: "Lone Linchpin RSE", article: "a" },
+  { phrase: "RSEing" },
+  { phrase: "an RSE" },
+  { phrase: "an Ultra-Elite RSE" },
+  { phrase: "a Lone Linchpin RSE" },
 ];
 
 const RESOURCES = {
@@ -125,14 +125,14 @@ function computeResult() {
 
   const nobodyToldYou = a.rseJob !== true;
   const title =
-    `Congratulations, you're ${tier.article} ${tier.label}` +
+    `Congratulations, you're ${tier.phrase}` +
     (nobodyToldYou ? " — and nobody told you!" : "!");
 
   if (a.others === true) {
     const isLoneLinchpin = a.majority === true ? false : true;
     const msg = isLoneLinchpin
-      ? "Others' research depends on the software you carry on your shoulders — while it's not even your main job. Critical? Absolutely. Fragile? A little. It doesn't have to be."
-      : "Other people's research runs on the software you build — so thank you for your service! You're the invisible infrastructure of somebody's science.";
+      ? "Fellow researchers depend on the software you build — even though it's not your main job. You're carrying their science forward, and it doesn't have to rest on one person alone."
+      : "Other researchers' science runs on the software you build — you're quietly helping them forward. Thank you for that! It may feel invisible, but the people you support feel it.";
     let next;
     if (isLoneLinchpin) {
       next = {
@@ -172,7 +172,7 @@ function computeResult() {
       return {
         eyebrow: "Your result",
         title,
-        msg: "You've been a Senior RSE all along — and now you know it. At your level, the fastest way to keep growing is by sharing what you know.",
+        msg: "You've been RSEing at senior level all along — and now you know it. The best way to keep growing is by sharing what you know.",
         confetti: true,
         next: {
           text: "Give a talk close to home — your institute, a research software meetup, or a conference — teach the people on their way up, or take the leap and make RSEing your full-time job:",
@@ -190,14 +190,14 @@ function computeResult() {
     return {
       eyebrow: "Your result",
       title,
-      msg: "You've been doing Research Software Engineering all along — and now you know it.",
+      msg: "You code to answer research questions — that's RSEing, even if it never made it into your job title. If you're looking to level up or to outsource, here are some RSE best practices and ways to find RSE support.",
       confetti: true,
       next: {
         text: "Now talk to your peers, keep getting better — and remember you don't have to do it all alone:",
         links: [
           { url: RESOURCES.peers, label: "Connect with peers: researchsoftware.org" },
           { url: RESOURCES.turingWay, label: "Practical guides to get better: The Turing Way" },
-          { url: RESOURCES.rsqKit, label: "Curated tips & best practices: EVERSE RSQKit" },
+          { url: "https://everse.software/RSQKit/researcher_who_codes", label: "RSE best practices for researchers who code: EVERSE RSQKit" },
           { url: RESOURCES.funding, label: "Sick of doing it all yourself? Get advice — or funding for an RSE (researchsoft.org)" },
         ],
       },
@@ -208,7 +208,7 @@ function computeResult() {
     return {
       eyebrow: "Your result",
       title,
-      msg: "Officially one of us — and at senior level that comes with a quiet duty: pull others in. Share your experience, and help the broader academic community find its way to research software.",
+      msg: "Officially one of us! The most rewarding thing about being this good with software is helping your fellow researchers get there too. Pull others in and help the academic community find its way to research software.",
       confetti: true,
       next: {
         text: "Mentor someone fumbling their first serious script, help the wider academic community plug into the RSE world, and keep building the field:",
