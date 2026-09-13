@@ -54,7 +54,7 @@ const NL_FUNDING = [
 
 function localizeLinks(next) {
   if (LOCALE !== "nl") return next;
-  const links = next.links.map((l) => {
+  const swapped = next.links.flatMap((l) => {
     if (l.url === RESOURCES.funding) return NL_FUNDING;
     if (l.url === RESOURCES.peers) {
       return [{
@@ -67,7 +67,13 @@ function localizeLinks(next) {
     }
     return [l];
   });
-  return { ...next, links: links.flat() };
+  const seen = new Set();
+  const links = swapped.filter((l) => {
+    if (seen.has(l.url)) return false;
+    seen.add(l.url);
+    return true;
+  });
+  return { ...next, links };
 }
 
 let state;

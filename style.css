@@ -192,23 +192,33 @@ h2 {
 
 .btn:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--ring); }
 
-/* Locale / regional toggle */
-.locale-toggle {
+/* Locale / regional picker */
+.locale-picker {
   margin-top: 18px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
-.locale-toggle a {
-  display: inline-block;
-  font-size: 0.8rem;
+.locale-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--muted);
   text-decoration: none;
   border: 1px solid #e2e8f0;
   border-radius: 999px;
-  padding: 6px 16px;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
-.locale-toggle a:hover { color: var(--accent); border-color: var(--accent); }
+a.locale-option:hover { color: var(--accent); border-color: var(--accent); }
+.locale-option.current {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: #f5f3ff;
+}
 
 @media (max-width: 460px) {
   .answers { flex-direction: column; }
