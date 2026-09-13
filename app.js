@@ -151,6 +151,7 @@ function computeResult() {
           { url: "https://research-software-directory.org/", label: "List it in a research software directory" },
           { url: "https://zenodo.org/", label: "Make it citable on Zenodo" },
           { url: RESOURCES.nlRse, label: "Make RSEing your full-time job: NL-RSE groups (nl-rse.org/groups)" },
+          { url: RESOURCES.funding, label: "Sick of doing it all yourself? Get advice — or funding for an RSE (researchsoft.org)" },
         ],
       };
     } else {
@@ -180,6 +181,7 @@ function computeResult() {
             { url: RESOURCES.irsc, label: "Submit a talk at IRSC, the research software conference" },
             { url: RESOURCES.carpentries, label: "Contribute to training: The Carpentries" },
             { url: RESOURCES.nlRse, label: "Make RSEing your full-time job: NL-RSE groups (nl-rse.org/groups)" },
+            { url: RESOURCES.funding, label: "Sick of doing it all yourself? Get advice — or funding for an RSE (researchsoft.org)" },
           ],
         },
       };
