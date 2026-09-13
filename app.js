@@ -3,6 +3,11 @@
 const QUESTIONS = [
   { id: 'codes', text: "Do you code or program for your research?" },
   {
+    id: 'depends',
+    text: "Does your research depend on software or code written by others?",
+    requires: (a) => a.codes !== true,
+  },
+  {
     id: 'majority',
     text: "Does the majority of your work involve coding?",
     requires: (a) => a.codes === true,
@@ -23,7 +28,18 @@ const TIERS = [
   { label: "RSE", article: "an" },
   { label: "Senior RSE", article: "a" },
   { label: "Ultra-Elite RSE", article: "an" },
+  { label: "Lone Linchpin RSE", article: "a" },
 ];
+
+const RESOURCES = {
+  peers: "https://researchsoftware.org/",
+  turingWay: "https://book.the-turing-way.org/",
+  rsqKit: "https://everse.software/RSQKit/",
+  funding: "https://www.researchsoft.org/resource/funding-opportunities/",
+  irsc: "https://www.researchsoft.org/irsc/",
+  carpentries: "https://carpentries.org/community/get-involved/",
+  nlRse: "https://nl-rse.org/groups",
+};
 
 let state;
 
@@ -52,9 +68,9 @@ function renderQuestion() {
   if (!q) return finish();
 
   $("qText").textContent = q.text;
-  const total = QUESTIONS.length;
-  $("qCount").textContent = `Question ${state.step + 1} of ${total}`;
-  $("progressBar").style.width = `${(state.step / total) * 100}%`;
+  const active = activeQuestions().length;
+  $("qCount").textContent = `Question ${state.step + 1}`;
+  $("progressBar").style.width = `${(state.step / active) * 100}%`;
   showScreen("question");
 }
 
@@ -70,28 +86,167 @@ function computeResult() {
   const a = state.answers;
 
   if (a.codes !== true) {
+    if (a.depends === true) {
+      return {
+        eyebrow: "Your result",
+        title: "Time to get an RSE on your side",
+        msg: "Your research depends on code — but writing and maintaining it doesn't have to be your job. RSEs exist exactly for this.",
+        confetti: false,
+        next: {
+          text: "Find an RSE near you — and the funding to make it happen:",
+          links: [
+            { url: RESOURCES.funding, label: "See RSE support & funding (researchsoft.org)" },
+          ],
+        },
+      };
+    }
+
     return {
       eyebrow: "Your result",
       title: "Not an RSE… yet",
-      msg: "You're not quite there — but the moment you write code to answer a research question, that's RSEing. You're closer than you think.",
+      msg: "You're closer than you think — the moment you write code to answer a research question, that's RSEing.",
       confetti: false,
+      next: {
+        text: "Start small: automate one annoying task in your own workflow — or find out what an RSE can open up for research that isn't digital yet:",
+        links: [
+          { url: "https://carpentries.org/", label: "Start coding with a workshop: The Carpentries" },
+          { url: RESOURCES.funding, label: "What RSEs are & what they can unlock (researchsoft.org)" },
+        ],
+      },
     };
   }
 
   let tier = TIERS[0]; // base
-  if (a.others === true) tier = TIERS[2]; // ultra-elite
-  else if (a.majority === true) tier = TIERS[1]; // senior
+  if (a.others === true) {
+    tier = a.majority === true ? TIERS[2] : TIERS[3]; // ultra-elite vs lone linchpin
+  } else if (a.majority === true) {
+    tier = TIERS[1]; // senior
+  }
 
   const nobodyToldYou = a.rseJob !== true;
   const title =
     `Congratulations, you're ${tier.article} ${tier.label}` +
     (nobodyToldYou ? " — and nobody told you!" : "!");
 
-  const msg = nobodyToldYou
-    ? "You've been doing Research Software Engineering all along — you just never had the title. If you want to grow into it, or make it your career, there's a whole community out there ready to help."
-    : "Officially one of us. If you want to level up further, the RSE world has plenty of paths — and people who'll point you the right way.";
+  if (a.others === true) {
+    const isLoneLinchpin = a.majority === true ? false : true;
+    const msg = isLoneLinchpin
+      ? "Others' research depends on the software you carry on your shoulders — while it's not even your main job. Critical? Absolutely. Fragile? A little. It doesn't have to be."
+      : "Other people's research runs on the software you build — so thank you for your service! You're the invisible infrastructure of somebody's science.";
+    let next;
+    if (isLoneLinchpin) {
+      next = {
+        text: "Soften the fragility two ways: get help when you can't do it all yourself, and make your software robust enough to outlive any single hero, including you:",
+        links: [
+          { url: RESOURCES.funding, label: "Funding to get extra help (researchsoft.org)" },
+          { url: RESOURCES.turingWay, label: "Robust & sustainable software: The Turing Way" },
+          { url: RESOURCES.rsqKit, label: "Quality & best practices: EVERSE RSQKit" },
+        ],
+      };
+    } else if (nobodyToldYou) {
+      next = {
+        text: "Did you know you can increase your visibility and impact — and that this could even be your full-time job? Some ideas:",
+        links: [
+          { url: "https://github.com/", label: "Make it open source on GitHub" },
+          { url: "https://research-software-directory.org/", label: "List it in a research software directory" },
+          { url: "https://zenodo.org/", label: "Make it citable on Zenodo" },
+          { url: RESOURCES.nlRse, label: "Make RSEing your full-time job: NL-RSE groups (nl-rse.org/groups)" },
+        ],
+      };
+    } else {
+      next = {
+        text: "Did you know you can increase your visibility and impact? A few easy wins:",
+        links: [
+          { url: "https://github.com/", label: "Make it open source on GitHub" },
+          { url: "https://research-software-directory.org/", label: "List it in a research software directory" },
+          { url: "https://zenodo.org/", label: "Make it citable on Zenodo" },
+        ],
+      };
+    }
+    return { eyebrow: "Your result", title, msg, confetti: true, next };
+  }
 
-  return { eyebrow: "Your result", title, msg, confetti: true };
+  if (nobodyToldYou) {
+    if (a.majority === true) {
+      return {
+        eyebrow: "Your result",
+        title,
+        msg: "You've been a Senior RSE all along — and now you know it. At your level, the fastest way to keep growing is by sharing what you know.",
+        confetti: true,
+        next: {
+          text: "Give a talk close to home — your institute, a research software meetup, or a conference — teach the people on their way up, or take the leap and make RSEing your full-time job:",
+          links: [
+            { url: RESOURCES.peers, label: "Find a research software meetup: researchsoftware.org" },
+            { url: RESOURCES.irsc, label: "Submit a talk at IRSC, the research software conference" },
+            { url: RESOURCES.carpentries, label: "Contribute to training: The Carpentries" },
+            { url: RESOURCES.nlRse, label: "Make RSEing your full-time job: NL-RSE groups (nl-rse.org/groups)" },
+          ],
+        },
+      };
+    }
+
+    return {
+      eyebrow: "Your result",
+      title,
+      msg: "You've been doing Research Software Engineering all along — and now you know it.",
+      confetti: true,
+      next: {
+        text: "Now talk to your peers, keep getting better — and remember you don't have to do it all alone:",
+        links: [
+          { url: RESOURCES.peers, label: "Connect with peers: researchsoftware.org" },
+          { url: RESOURCES.turingWay, label: "Practical guides to get better: The Turing Way" },
+          { url: RESOURCES.rsqKit, label: "Curated tips & best practices: EVERSE RSQKit" },
+          { url: RESOURCES.funding, label: "Sick of doing it all yourself? Get advice — or funding for an RSE (researchsoft.org)" },
+        ],
+      },
+    };
+  }
+
+  if (a.majority === true) {
+    return {
+      eyebrow: "Your result",
+      title,
+      msg: "Officially one of us — and at senior level that comes with a quiet duty: pull others in. Share your experience, and help the broader academic community find its way to research software.",
+      confetti: true,
+      next: {
+        text: "Mentor someone fumbling their first serious script, help the wider academic community plug into the RSE world, and keep building the field:",
+        links: [
+          { url: RESOURCES.peers, label: "Find peers & would-be mentees: researchsoftware.org" },
+          { url: RESOURCES.irsc, label: "Give a talk at IRSC, the research software conference" },
+          { url: RESOURCES.carpentries, label: "Train the next generation: The Carpentries" },
+        ],
+      },
+    };
+  }
+
+  return {
+    eyebrow: "Your result",
+    title,
+    msg: "Officially one of us.",
+    confetti: true,
+    next: {
+      text: "Find likeminded people — in your area, or internationally:",
+      links: [
+        { url: RESOURCES.peers, label: "Find your community (researchsoftware.org)" },
+      ],
+    },
+  };
+}
+
+function populateNext(n) {
+  $("nextText").textContent = n.text;
+  const list = $("nextLinks");
+  list.innerHTML = "";
+  n.links.forEach((l) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = l.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = l.label;
+    li.appendChild(a);
+    list.appendChild(li);
+  });
 }
 
 function finish() {
@@ -99,6 +254,7 @@ function finish() {
   $("resultEyebrow").textContent = r.eyebrow;
   $("resultTitle").textContent = r.title;
   $("resultMsg").textContent = r.msg;
+  populateNext(r.next);
   showScreen("result");
   if (r.confetti) launchConfetti();
 }

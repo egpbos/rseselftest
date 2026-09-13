@@ -112,6 +112,50 @@ h2 {
   color: var(--muted);
 }
 
+/* "What next?" action box */
+.whatnext {
+  margin: 24px 0 30px;
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f5f3ff, #eef2ff);
+  border: 1px solid #e4e2ff;
+}
+.whatnext-label {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.whatnext-text {
+  margin: 0 0 14px;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.next-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.next-links a {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e4e2ff;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.next-links a::after { content: " \2192"; opacity: 0.6; }
+.next-links a:hover { border-color: var(--accent); box-shadow: 0 8px 18px -14px var(--ring); }
+.next-links a:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--ring); }
+
 /* Buttons */
 .answers {
   display: flex;
