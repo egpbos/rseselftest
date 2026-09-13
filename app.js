@@ -41,6 +41,35 @@ const RESOURCES = {
   nlRse: "https://nl-rse.org/groups",
 };
 
+const LOCALE = (() => {
+  const m = location.pathname.match(/\/([a-z]{2})\/?$/);
+  return m && m[1] === "nl" ? "nl" : "en";
+})();
+
+const NL_FUNDING = [
+  { url: "https://www.esciencecenter.nl/", label: "Research software expertise & services: Netherlands eScience Center (esciencecenter.nl)" },
+  { url: "https://www.openscience.nl/", label: "Open science & software funding: Open Science NL (openscience.nl)" },
+  { url: "https://www.tdcc.nl/", label: "Thematic digital competence centres: TDCC (tdcc.nl)" },
+];
+
+function localizeLinks(next) {
+  if (LOCALE !== "nl") return next;
+  const links = next.links.map((l) => {
+    if (l.url === RESOURCES.funding) return NL_FUNDING;
+    if (l.url === RESOURCES.peers) {
+      return [{
+        url: "https://nl-rse.org/groups",
+        label: l.label.replace("researchsoftware.org", "nl-rse.org/groups"),
+      }];
+    }
+    if (l.url === RESOURCES.irsc) {
+      return [{ url: "https://nl-rse.org/groups", label: "Meet the NL-RSE community (nl-rse.org/groups)" }];
+    }
+    return [l];
+  });
+  return { ...next, links: links.flat() };
+}
+
 let state;
 
 function reset() {
@@ -172,7 +201,7 @@ function computeResult() {
       return {
         eyebrow: "Your result",
         title,
-        msg: "You've been RSEing at senior level all along — and now you know it. The best way to keep growing is by sharing what you know.",
+        msg: "Research software engineering is a big part of what you do — maybe the biggest. A great way to keep growing is by sharing what you know.",
         confetti: true,
         next: {
           text: "Give a talk close to home — your institute, a research software meetup, or a conference — teach the people on their way up, or take the leap and make RSEing your full-time job:",
@@ -256,7 +285,7 @@ function finish() {
   $("resultEyebrow").textContent = r.eyebrow;
   $("resultTitle").textContent = r.title;
   $("resultMsg").textContent = r.msg;
-  populateNext(r.next);
+  populateNext(localizeLinks(r.next));
   showScreen("result");
   if (r.confetti) launchConfetti();
 }
