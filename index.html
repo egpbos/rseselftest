@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The RSE Self-Test</title>
+  <meta name="description" content="A quick self-test: find out what kind of Research Software Engineer you already are." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <main class="card">
+    <!-- Intro -->
+    <section id="intro" class="screen active">
+      <p class="eyebrow">Research Software Engineering</p>
+      <h1>The RSE Self-Test</h1>
+      <p class="lede">
+        Answer a few quick questions and find out what kind of Research
+        Software Engineer you already are. No wrong answers &mdash; promise.
+      </p>
+      <button id="startBtn" class="btn primary" type="button">Start the test</button>
+    </section>
+
+    <!-- Question -->
+    <section id="question" class="screen">
+      <div class="progress"><span id="progressBar"></span></div>
+      <p class="qcount" id="qCount"></p>
+      <h2 id="qText"></h2>
+      <div class="answers">
+        <button class="btn yes" type="button" data-answer="yes">Yes</button>
+        <button class="btn no" type="button" data-answer="no">No</button>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="screen">
+      <p class="eyebrow" id="resultEyebrow"></p>
+      <h1 id="resultTitle"></h1>
+      <p class="lede" id="resultMsg"></p>
+      <button id="restartBtn" class="btn primary" type="button">Take it again</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
