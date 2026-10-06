@@ -1,4 +1,5 @@
-// The RSE Self-Test — vanilla JS, no dependencies.
+//  Copyright 2026 Patrick Bos, University of Groningen
+//  Licensed under the Apache License, Version 2.0.
 
 const QUESTIONS = [
   { id: 'codes', text: "Do you code or program for your research?" },
